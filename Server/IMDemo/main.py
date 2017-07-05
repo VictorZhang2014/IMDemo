@@ -3,7 +3,7 @@
 from Kernel.Networks import VZSocket
 
 
-_host = "192.168.0.103"
+_host = "10.18.138.27"
 _port = 8888
 _sock = VZSocket.VZSocket(_host, _port)
 _sock.start()
