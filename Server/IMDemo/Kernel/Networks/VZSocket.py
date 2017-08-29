@@ -2,6 +2,7 @@
 
 import socket
 import threading
+import struct
 
 from Kernel.Utilities import VZThread
 from Kernel.Utilities.VZUtilCommon import VZUtilCommon
@@ -57,9 +58,55 @@ class VZSocket(VZSocketDelegate):
             self.__MAX_BYTES = 2048
             __result = tupleconn[0].recv(self.__MAX_BYTES)
 
-            self.socket_recv(self, __result)
+            # self.socket_recv(self, __result)
 
-            print "Receive Packages is : ", __result
+            # 1.解析协议包头
+            __offset = 0
+            __package_size, = struct.unpack_from('!I', __result, __offset)
+            __offset += 4
+            __vztag1, = struct.unpack_from('!c', __result, __offset)
+            __offset += 1
+            __vztag2, = struct.unpack_from('!c', __result, __offset)
+            __offset += 1
+            __vztag3, = struct.unpack_from('!c', __result, __offset)
+            __offset += 1
+            __vztag4, = struct.unpack_from('!c', __result, __offset)
+            __offset += 1
+            __ptclVersion, = struct.unpack_from('!B', __result, __offset)
+            __offset += 1
+            __ptclEncrypt, = struct.unpack_from('!B', __result, __offset)
+            __offset += 1
+            __ptclCmpreType, = struct.unpack_from('!B', __result, __offset)
+            __offset += 1
+            __msgAction, = struct.unpack_from('!B', __result, __offset)
+            __offset += 1
+            __bodyFormat, = struct.unpack_from('!B', __result, __offset)
+            __offset += 1
+            __time, = struct.unpack_from('!Q', __result, __offset)
+            __offset += 8
+            __statusCode, = struct.unpack_from('!H', __result, __offset)
+            __offset += 2
+            __ptclType, = struct.unpack_from('!I', __result, __offset)
+            __offset += 4
+
+            # 2.解析协议包内容
+            __content_size = __package_size - __offset
+            __content_fmt = str('!' + str(__content_size) + 's')
+            __package_json, = struct.unpack_from(__content_fmt, __result, __offset)
+
+            print "---------------------------------------------------------------------------------------"
+            print "__package_size=", __package_size
+            print "__vztag=", __vztag1 + __vztag2 + __vztag3 + __vztag4
+            print "__ptclVersion=", __ptclVersion
+            print "__ptclEncrypt=", __ptclEncrypt
+            print "__ptclCmpreType=", __ptclCmpreType
+            print "__msgAction=", __msgAction
+            print "__bodyFormat=", __bodyFormat
+            print "__time=", __time
+            print "__statusCode=", __statusCode
+            print "__ptclType=", __ptclType
+            print "__package_json=", __package_json
+            print "---------------------------------------------------------------------------------------"
 
             self.add_message("sessionId=" + tupleconn[1])
 

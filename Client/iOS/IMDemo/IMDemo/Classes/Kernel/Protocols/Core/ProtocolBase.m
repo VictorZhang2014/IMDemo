@@ -37,7 +37,7 @@
     _header.vzTag[2] = 'D';
     _header.vzTag[3] = 'M';
     
-    _header.ptclVersion = 2;
+    _header.ptclVersion = 1;
     _header.ptclEncrypt = 1;
     _header.ptclCmpreType = 1;
     _header.bodyFormat = 1;
@@ -88,7 +88,7 @@
     [self packUInt8:_header.vzTag[1]];
     [self packUInt8:_header.vzTag[2]];
     [self packUInt8:_header.vzTag[3]];
-    [self packUInt16:_header.ptclVersion];
+    [self packUInt8:_header.ptclVersion];
     [self packUInt8:_header.ptclEncrypt];
     [self packUInt8:_header.ptclCmpreType];
     [self packUInt8:_header.msgAction];

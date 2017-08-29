@@ -9,10 +9,10 @@
 #import <Foundation/Foundation.h>
 #import "ProtocolDefines.h"
 
-//定义包头的结构体
+//定义协议包头的结构体 共27个字节
 typedef struct {
     char   vzTag[4];         //“VZDM”
-    UInt8 ptclVersion;       //协议的版本号 1
+    UInt8  ptclVersion;       //协议的版本号 1
     UInt8  ptclEncrypt;      //加密类型, 1:不加密  2:加密
     UInt8  ptclCmpreType;    //压缩类型, 1:不压缩  2:gzip
     UInt8  bodyFormat;       //消息内容格式类型, 1:JSON 2:xml
